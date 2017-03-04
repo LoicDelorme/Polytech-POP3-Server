@@ -25,6 +25,11 @@ public class Pop3Server implements Runnable {
 	private static final int SERVER_QUEUE_LENGHT = 50;
 
 	/**
+	 * The server autologout delay.
+	 */
+	private static final int SERVER_AUTOLOGOUT_DELAY = 10 * 60; // 10 minutes in seconds.
+
+	/**
 	 * The logger.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(Pop3Server.class.getName());
@@ -35,11 +40,11 @@ public class Pop3Server implements Runnable {
 			while (true) {
 				Socket client = serverSocket.accept();
 
-				Thread clientThread = new Thread(new Pop3Session(client));
+				Thread clientThread = new Thread(new Pop3Session(client, SERVER_AUTOLOGOUT_DELAY));
 				clientThread.start();
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Unabled to create POP 3 server socket on port: " + SERVER_PORT);
+			LOGGER.log(Level.SEVERE, "Unabled to create POP 3 server socket on port: " + SERVER_PORT, e);
 		}
 	}
 
