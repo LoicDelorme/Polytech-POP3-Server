@@ -11,9 +11,14 @@ import fr.polytech.pop3.server.users.User;
 public class ErrorCommandResult extends CommandResult {
 
 	/**
-	 * The error message.
+	 * The basic error message.
 	 */
-	private static final String ERROR_MESSAGE = "-ERR %s";
+	private static final String BASIC_ERROR_MESSAGE = "-ERR";
+
+	/**
+	 * The enhanced error message.
+	 */
+	private static final String ENHANCED_ERROR_MESSAGE = "-ERR %s";
 
 	/**
 	 * Create an error command result.
@@ -39,6 +44,6 @@ public class ErrorCommandResult extends CommandResult {
 
 	@Override
 	public String toString() {
-		return String.format(ERROR_MESSAGE, this.message);
+		return this.message == null ? BASIC_ERROR_MESSAGE : String.format(ENHANCED_ERROR_MESSAGE, this.message);
 	}
 }

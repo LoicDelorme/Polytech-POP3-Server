@@ -11,9 +11,14 @@ import fr.polytech.pop3.server.users.User;
 public class SuccessCommandResult extends CommandResult {
 
 	/**
-	 * The success message.
+	 * The basic success message.
 	 */
-	private static final String SUCCESS_MESSAGE = "+OK %s";
+	private static final String BASIC_SUCCESS_MESSAGE = "+OK";
+
+	/**
+	 * The enhanced success message.
+	 */
+	private static final String ENHANCED_SUCCESS_MESSAGE = "+OK %s";
 
 	/**
 	 * Create a success command result.
@@ -39,6 +44,6 @@ public class SuccessCommandResult extends CommandResult {
 
 	@Override
 	public String toString() {
-		return String.format(SUCCESS_MESSAGE, this.message);
+		return this.message == null ? BASIC_SUCCESS_MESSAGE : String.format(ENHANCED_SUCCESS_MESSAGE, this.message);
 	}
 }
