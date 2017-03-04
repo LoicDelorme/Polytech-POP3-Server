@@ -1,6 +1,6 @@
 package fr.polytech.pop3.server.commands.results;
 
-import fr.polytech.pop3.server.states.State;
+import fr.polytech.pop3.server.users.User;
 
 /**
  * This class represents a command result.
@@ -8,22 +8,22 @@ import fr.polytech.pop3.server.states.State;
  * @author DELORME Loïc
  * @since 1.0.0
  */
-public class CommandResult {
+public abstract class CommandResult {
 
 	/**
 	 * The command result status.
 	 */
-	private final CommandResultStatus commandResultStatus;
+	protected final CommandResultStatus status;
 
 	/**
-	 * The message.
+	 * The command result message.
 	 */
-	private final String message;
+	protected final String message;
 
 	/**
-	 * The next state.
+	 * The command result user.
 	 */
-	private final State nextState;
+	protected final User user;
 
 	/**
 	 * Create a command result.
@@ -31,14 +31,26 @@ public class CommandResult {
 	 * @param status
 	 *            The command result status.
 	 * @param message
-	 *            The message.
-	 * @param nextState
-	 *            The next state.
+	 *            The command result message.
 	 */
-	public CommandResult(CommandResultStatus status, String message, State nextState) {
-		this.commandResultStatus = status;
+	public CommandResult(CommandResultStatus status, String message) {
+		this(status, message, null);
+	}
+
+	/**
+	 * Create a command result.
+	 * 
+	 * @param status
+	 *            The command result status.
+	 * @param message
+	 *            The command result message.
+	 * @param user
+	 *            The command result user.
+	 */
+	public CommandResult(CommandResultStatus status, String message, User user) {
+		this.status = status;
 		this.message = message;
-		this.nextState = nextState;
+		this.user = user;
 	}
 
 	/**
@@ -46,8 +58,8 @@ public class CommandResult {
 	 * 
 	 * @return The command result status.
 	 */
-	public CommandResultStatus getCommandResultStatus() {
-		return this.commandResultStatus;
+	public CommandResultStatus getStatus() {
+		return this.status;
 	}
 
 	/**
@@ -60,11 +72,23 @@ public class CommandResult {
 	}
 
 	/**
-	 * Get the next state.
+	 * Get the user.
 	 * 
-	 * @return The next state.
+	 * @return The user.
 	 */
-	public State getNextState() {
-		return this.nextState;
+	public User getUser() {
+		return this.user;
 	}
+
+	/**
+	 * Check if the command was well executed.
+	 * 
+	 * @return True if it was well executed, else False.
+	 */
+	public boolean wasWellExecuted() {
+		return CommandResultStatus.SUCCESS == this.status;
+	}
+
+	@Override
+	public abstract String toString();
 }
