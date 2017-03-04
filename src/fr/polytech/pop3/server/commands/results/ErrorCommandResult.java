@@ -1,5 +1,7 @@
 package fr.polytech.pop3.server.commands.results;
 
+import fr.polytech.pop3.server.states.State;
+
 /**
  * This class represents an error command result.
  *
@@ -13,8 +15,10 @@ public class ErrorCommandResult extends CommandResult {
 	 * 
 	 * @param message
 	 *            The message.
+	 * @param nextState
+	 *            The next state.
 	 */
-	public ErrorCommandResult(String message) {
-		super(CommandResultStatus.ERROR, message);
+	public ErrorCommandResult(String message, State nextState) {
+		super(CommandResultStatus.ERROR, message, nextState);
 	}
 }

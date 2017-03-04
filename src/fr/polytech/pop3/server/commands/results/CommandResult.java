@@ -1,5 +1,7 @@
 package fr.polytech.pop3.server.commands.results;
 
+import fr.polytech.pop3.server.states.State;
+
 /**
  * This class represents a command result.
  *
@@ -11,12 +13,17 @@ public class CommandResult {
 	/**
 	 * The command result status.
 	 */
-	protected final CommandResultStatus commandResultStatus;
+	private final CommandResultStatus commandResultStatus;
 
 	/**
-	 * The command result message.
+	 * The message.
 	 */
-	protected final String message;
+	private final String message;
+
+	/**
+	 * The next state.
+	 */
+	private final State nextState;
 
 	/**
 	 * Create a command result.
@@ -24,11 +31,14 @@ public class CommandResult {
 	 * @param status
 	 *            The command result status.
 	 * @param message
-	 *            The command result message.
+	 *            The message.
+	 * @param nextState
+	 *            The next state.
 	 */
-	public CommandResult(CommandResultStatus status, String message) {
+	public CommandResult(CommandResultStatus status, String message, State nextState) {
 		this.commandResultStatus = status;
 		this.message = message;
+		this.nextState = nextState;
 	}
 
 	/**
@@ -47,5 +57,14 @@ public class CommandResult {
 	 */
 	public String getMessage() {
 		return this.message;
+	}
+
+	/**
+	 * Get the next state.
+	 * 
+	 * @return The next state.
+	 */
+	public State getNextState() {
+		return this.nextState;
 	}
 }

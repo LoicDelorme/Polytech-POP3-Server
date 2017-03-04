@@ -1,5 +1,7 @@
 package fr.polytech.pop3.server.commands.results;
 
+import fr.polytech.pop3.server.states.State;
+
 /**
  * This class represents a success command result.
  *
@@ -13,8 +15,10 @@ public class SuccessCommandResult extends CommandResult {
 	 * 
 	 * @param message
 	 *            The message.
+	 * @param nextState
+	 *            The next state.
 	 */
-	public SuccessCommandResult(String message) {
-		super(CommandResultStatus.SUCCESS, message);
+	public SuccessCommandResult(String message, State nextState) {
+		super(CommandResultStatus.SUCCESS, message, nextState);
 	}
 }
