@@ -1,6 +1,7 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
 import fr.polytech.pop3.server.users.User;
 
 /**
@@ -25,6 +26,6 @@ public class NOOP extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return null;
+		return new SuccessCommandResult(null);
 	}
 }

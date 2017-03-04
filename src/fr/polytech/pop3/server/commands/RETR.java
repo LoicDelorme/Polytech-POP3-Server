@@ -1,6 +1,9 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.commands.results.ErrorCommandResult;
+import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
+import fr.polytech.pop3.server.users.Message;
 import fr.polytech.pop3.server.users.User;
 
 /**
@@ -10,6 +13,16 @@ import fr.polytech.pop3.server.users.User;
  * @since 1.0.0
  */
 public class RETR extends Command {
+
+	/**
+	 * The RETR message.
+	 */
+	private static final String RETR_MESSAGE = "%d octet(s)\r\n%s\r\n.";
+
+	/**
+	 * The invalid message number error message.
+	 */
+	private static final String INVALID_MESSAGE_NUMBER_ERROR_MESSAGE = "invalid message number";
 
 	/**
 	 * The RETR command name.
@@ -25,6 +38,20 @@ public class RETR extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return null;
+		switch (parameters.length) {
+			case 1:
+				try {
+					final Message message = user.listMessage(Integer.parseInt(parameters[0]));
+					if (message == null) {
+						return new ErrorCommandResult(INVALID_MESSAGE_NUMBER_ERROR_MESSAGE);
+					}
+
+					return new SuccessCommandResult(String.format(RETR_MESSAGE, message.getSize(), message.getContent()));
+				} catch (NumberFormatException e) {
+					return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
+				}
+			default:
+				return new ErrorCommandResult(INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE);
+		}
 	}
 }

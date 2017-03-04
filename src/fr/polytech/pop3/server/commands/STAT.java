@@ -1,6 +1,7 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
 import fr.polytech.pop3.server.users.User;
 
 /**
@@ -10,6 +11,11 @@ import fr.polytech.pop3.server.users.User;
  * @since 1.0.0
  */
 public class STAT extends Command {
+
+	/**
+	 * The stat message.
+	 */
+	private static final String STAT_MESSAGE = "%d %d";
 
 	/**
 	 * The STAT command name.
@@ -25,6 +31,6 @@ public class STAT extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return null;
+		return new SuccessCommandResult(String.format(STAT_MESSAGE, user.getNumberOfMessages(), user.getSizeOfMessages()));
 	}
 }
