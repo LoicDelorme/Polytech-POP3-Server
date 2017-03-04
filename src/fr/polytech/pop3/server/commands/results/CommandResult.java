@@ -13,7 +13,7 @@ public abstract class CommandResult {
 	/**
 	 * The command result status.
 	 */
-	protected final CommandResultStatus status;
+	private final CommandResultStatus status;
 
 	/**
 	 * The command result message.
@@ -54,12 +54,12 @@ public abstract class CommandResult {
 	}
 
 	/**
-	 * Get the command result status.
+	 * Check if the command was well executed.
 	 * 
-	 * @return The command result status.
+	 * @return True if it was well executed, else False.
 	 */
-	public CommandResultStatus getStatus() {
-		return this.status;
+	public boolean wasWellExecuted() {
+		return CommandResultStatus.SUCCESS == this.status;
 	}
 
 	/**
@@ -78,15 +78,6 @@ public abstract class CommandResult {
 	 */
 	public User getUser() {
 		return this.user;
-	}
-
-	/**
-	 * Check if the command was well executed.
-	 * 
-	 * @return True if it was well executed, else False.
-	 */
-	public boolean wasWellExecuted() {
-		return CommandResultStatus.SUCCESS == this.status;
 	}
 
 	@Override
