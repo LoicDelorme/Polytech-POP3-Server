@@ -14,7 +14,7 @@ public class Pop3Stopwatch extends Thread implements Pop3TimerObserver {
 	/**
 	 * The number of nano per second.
 	 */
-	private static final long NANO_PER_SECOND = 1000000000;
+	private static final int NANO_PER_SECOND = 1000000000;
 
 	/**
 	 * The sleep delay.
@@ -27,7 +27,7 @@ public class Pop3Stopwatch extends Thread implements Pop3TimerObserver {
 	private static final Logger LOGGER = Logger.getLogger(Pop3Stopwatch.class.getName());
 
 	/**
-	 * The connection timeout.
+	 * The connection timeout (in second(s)).
 	 */
 	private final int connectionTimeout;
 
@@ -50,7 +50,7 @@ public class Pop3Stopwatch extends Thread implements Pop3TimerObserver {
 	 * Create a POP 3 stopwatch.
 	 * 
 	 * @param connectionTimeout
-	 *            The connection timeout.
+	 *            The connection timeout (in second(s)).
 	 * @param pop3TimerObservable
 	 *            The POP 3 timer observable.
 	 */
@@ -77,12 +77,12 @@ public class Pop3Stopwatch extends Thread implements Pop3TimerObserver {
 
 		while (this.isRunning) {
 			try {
+				Thread.sleep(SLEEP_DELAY);
+
 				if ((System.nanoTime() - this.startTime) / NANO_PER_SECOND > this.connectionTimeout) {
 					this.isRunning = false;
 					this.pop3TimerObservable.notifyAutoLogout();
 				}
-
-				Thread.sleep(SLEEP_DELAY);
 			} catch (InterruptedException e) {
 				LOGGER.log(Level.SEVERE, "POP 3 stopwatch failed to enter into sleep mode.");
 			}
