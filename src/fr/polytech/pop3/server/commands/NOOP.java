@@ -1,6 +1,7 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.users.User;
 
 /**
  * This class represents a NOOP POP 3 command.
@@ -23,7 +24,7 @@ public class NOOP extends Command {
 	}
 
 	@Override
-	public CommandResult run(String[] parameters) {
+	public CommandResult execute(User user, String[] parameters) {
 		return null;
 	}
 }

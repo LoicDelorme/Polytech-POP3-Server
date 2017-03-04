@@ -1,6 +1,7 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.users.User;
 
 /**
  * This class represents a POP 3 command.
@@ -35,13 +36,15 @@ public abstract class Command {
 	}
 
 	/**
-	 * Run the POP 3 command.
+	 * Execute the POP 3 command.
 	 * 
+	 * @param user
+	 *            The user (optionnal).
 	 * @param parameters
 	 *            The parameters (optionnal).
 	 * @return The command result.
 	 */
-	public abstract CommandResult run(String[] parameters);
+	public abstract CommandResult execute(User user, String[] parameters);
 
 	@Override
 	public String toString() {
