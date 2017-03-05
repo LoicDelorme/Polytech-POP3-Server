@@ -42,12 +42,12 @@ public class IdentifiedState extends State {
 		State nextState = null;
 
 		switch (command) {
-			case PASS.PASS_COMMAND_NAME:
+			case PASS.COMMAND_NAME:
 				CommandResult passCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = passCommandResult.toString();
 				nextState = passCommandResult.wasWellExecuted() ? new TransactionState(passCommandResult.getUser()) : this;
 				break;
-			case QUIT.QUIT_COMMAND_NAME:
+			case QUIT.COMMAND_NAME:
 				message = new SuccessCommandResult(GOODBYE_MESSAGE).toString();
 				nextState = null;
 				break;

@@ -39,17 +39,17 @@ public class AuthorizationState extends State {
 		State nextState = null;
 
 		switch (command) {
-			case APOP.APOP_COMMAND_NAME:
+			case APOP.COMMAND_NAME:
 				CommandResult apopCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = apopCommandResult.toString();
 				nextState = apopCommandResult.wasWellExecuted() ? new TransactionState(apopCommandResult.getUser()) : this;
 				break;
-			case USER.USER_COMMAND_NAME:
+			case USER.COMMAND_NAME:
 				CommandResult userCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = userCommandResult.toString();
 				nextState = userCommandResult.wasWellExecuted() ? new IdentifiedState(userCommandResult.getUser()) : this;
 				break;
-			case QUIT.QUIT_COMMAND_NAME:
+			case QUIT.COMMAND_NAME:
 				message = new SuccessCommandResult(GOODBYE_MESSAGE).toString();
 				nextState = null;
 				break;
