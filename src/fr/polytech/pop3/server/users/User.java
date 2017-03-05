@@ -94,10 +94,20 @@ public class User {
 	 * @return NULL if there is no message at the specified index, else the requested message.
 	 */
 	public Message listMessage(int index) {
-		try {
-			return listMessages().get(index - 1);
-		} catch (Exception e) {
-			return null;
+		final int messageIndex = index - 1;
+		final List<Message> messages = listMessages();
+
+		if (messageIndex >= 0 && messageIndex < messages.size()) {
+			return messages.get(messageIndex);
 		}
+
+		return null;
+	}
+
+	/**
+	 * Unmark all marked messages.
+	 */
+	public void unmarkMessages() {
+		this.messages.stream().filter(message -> message.isMarked()).forEach(message -> message.unmark());
 	}
 }
