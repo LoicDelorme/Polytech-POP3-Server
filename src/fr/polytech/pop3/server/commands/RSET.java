@@ -1,6 +1,7 @@
 package fr.polytech.pop3.server.commands;
 
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
 import fr.polytech.pop3.server.users.User;
 
 /**
@@ -12,19 +13,25 @@ import fr.polytech.pop3.server.users.User;
 public class RSET extends Command {
 
 	/**
-	 * The RSET command name.
+	 * The RSET message.
 	 */
-	public static final String RSET_COMMAND_NAME = "RSET";
+	private static final String RSET_MESSAGE = "maildrop has %d message(s) (%d octet(s))";
+
+	/**
+	 * The command name.
+	 */
+	public static final String COMMAND_NAME = "RSET";
 
 	/**
 	 * Create a RSET POP 3 command.
 	 */
 	public RSET() {
-		super(RSET_COMMAND_NAME);
+		super(COMMAND_NAME);
 	}
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return null;
+		user.unmarkMessages();
+		return new SuccessCommandResult(String.format(RSET_MESSAGE, user.getNumberOfMessages(), user.getSizeOfMessages()));
 	}
 }
