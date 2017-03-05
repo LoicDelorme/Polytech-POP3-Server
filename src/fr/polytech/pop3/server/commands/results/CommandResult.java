@@ -63,15 +63,6 @@ public abstract class CommandResult {
 	}
 
 	/**
-	 * Get the message.
-	 * 
-	 * @return The message.
-	 */
-	public String getMessage() {
-		return this.message;
-	}
-
-	/**
 	 * Get the user.
 	 * 
 	 * @return The user.
