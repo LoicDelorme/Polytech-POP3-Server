@@ -13,15 +13,15 @@ import fr.polytech.pop3.server.users.User;
 public class NOOP extends Command {
 
 	/**
-	 * The NOOP command name.
+	 * The command name.
 	 */
-	public static final String NOOP_COMMAND_NAME = "NOOP";
+	public static final String COMMAND_NAME = "NOOP";
 
 	/**
 	 * Create a NOOP POP 3 command.
 	 */
 	public NOOP() {
-		super(NOOP_COMMAND_NAME);
+		super(COMMAND_NAME);
 	}
 
 	@Override

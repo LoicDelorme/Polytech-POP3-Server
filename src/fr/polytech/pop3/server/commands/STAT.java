@@ -13,20 +13,20 @@ import fr.polytech.pop3.server.users.User;
 public class STAT extends Command {
 
 	/**
-	 * The stat message.
+	 * The STAT message.
 	 */
 	private static final String STAT_MESSAGE = "%d %d";
 
 	/**
-	 * The STAT command name.
+	 * The command name.
 	 */
-	public static final String STAT_COMMAND_NAME = "STAT";
+	public static final String COMMAND_NAME = "STAT";
 
 	/**
 	 * Create a STAT POP 3 command.
 	 */
 	public STAT() {
-		super(STAT_COMMAND_NAME);
+		super(COMMAND_NAME);
 	}
 
 	@Override

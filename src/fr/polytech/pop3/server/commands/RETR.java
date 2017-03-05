@@ -20,20 +20,30 @@ public class RETR extends Command {
 	private static final String RETR_MESSAGE = "%d octet(s)\r\n%s\r\n.";
 
 	/**
+	 * The invalid number of parameters error message.
+	 */
+	private static final String INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE = "invalid number of parameters";
+
+	/**
+	 * The invalid parameters error message.
+	 */
+	private static final String INVALID_PARAMETER_ERROR_MESSAGE = "invalid parameter";
+
+	/**
 	 * The invalid message number error message.
 	 */
 	private static final String INVALID_MESSAGE_NUMBER_ERROR_MESSAGE = "invalid message number";
 
 	/**
-	 * The RETR command name.
+	 * The command name.
 	 */
-	public static final String RETR_COMMAND_NAME = "RETR";
+	public static final String COMMAND_NAME = "RETR";
 
 	/**
 	 * Create a RETR POP 3 command.
 	 */
 	public RETR() {
-		super(RETR_COMMAND_NAME);
+		super(COMMAND_NAME);
 	}
 
 	@Override
