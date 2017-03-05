@@ -12,16 +12,6 @@ import fr.polytech.pop3.server.users.User;
 public abstract class Command {
 
 	/**
-	 * The invalid number of parameters error message.
-	 */
-	protected static final String INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE = "invalid number of parameters";
-
-	/**
-	 * The invalid parameters error message.
-	 */
-	protected static final String INVALID_PARAMETER_ERROR_MESSAGE = "invalid parameter";
-
-	/**
 	 * The command name.
 	 */
 	protected final String name;
