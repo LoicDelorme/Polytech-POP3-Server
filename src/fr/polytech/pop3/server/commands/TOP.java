@@ -1,6 +1,12 @@
 package fr.polytech.pop3.server.commands;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import fr.polytech.pop3.server.commands.results.CommandResult;
+import fr.polytech.pop3.server.commands.results.ErrorCommandResult;
+import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
+import fr.polytech.pop3.server.users.Message;
 import fr.polytech.pop3.server.users.User;
 
 /**
@@ -12,19 +18,62 @@ import fr.polytech.pop3.server.users.User;
 public class TOP extends Command {
 
 	/**
-	 * The TOP command name.
+	 * The TOP message.
 	 */
-	public static final String TOP_COMMAND_NAME = "TOP";
+	private static final String TOP_MESSAGE = "\r\n%s\r\n\r\n%s\r\n.";
+
+	/**
+	 * The invalid number of parameters error message.
+	 */
+	private static final String INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE = "invalid number of parameters";
+
+	/**
+	 * The invalid parameters error message.
+	 */
+	private static final String INVALID_PARAMETER_ERROR_MESSAGE = "invalid parameter";
+
+	/**
+	 * The empty maildrop error message.
+	 */
+	private static final String EMPTY_MAILDROP_ERROR_MESSAGE = "no such message, maildrop is empty";
+
+	/**
+	 * The invalid index error message.
+	 */
+	private static final String INVALID_INDEX_ERROR_MESSAGE = "no such message, only %d message(s) in maildrop";
+
+	/**
+	 * The command name.
+	 */
+	public static final String COMMAND_NAME = "TOP";
 
 	/**
 	 * Create a TOP POP 3 command.
 	 */
 	public TOP() {
-		super(TOP_COMMAND_NAME);
+		super(COMMAND_NAME);
 	}
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return null;
+		if (parameters.length != 2) {
+			return new ErrorCommandResult(INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE);
+		}
+
+		try {
+			final int index = Integer.parseInt(parameters[0]);
+			final int numberOfLines = Integer.parseInt(parameters[1]);
+			final int numberOfMessages = user.getNumberOfMessages();
+			final boolean isMaildropEmpty = numberOfMessages == 0;
+			final Message message = isMaildropEmpty ? null : user.listMessage(index);
+
+			if (message == null) {
+				return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));
+			}
+
+			return new SuccessCommandResult(String.format(TOP_MESSAGE, message.getHeaders(), Arrays.asList(message.getBody().split("\n")).stream().limit(numberOfLines).collect(Collectors.joining("\n"))));
+		} catch (NumberFormatException e) {
+			return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
+		}
 	}
 }
