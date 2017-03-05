@@ -24,7 +24,7 @@ public class UIDL extends Command {
 	/**
 	 * The enhanced UIDL message.
 	 */
-	private static final String ENHANCED_UIDL_MESSAGE = "UIDLs\r\n%s\r\n.";
+	private static final String ENHANCED_UIDL_MESSAGE = "\r\n%s\r\n.";
 
 	/**
 	 * The invalid number of parameters error message.
