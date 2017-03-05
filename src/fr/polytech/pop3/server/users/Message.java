@@ -1,5 +1,8 @@
 package fr.polytech.pop3.server.users;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * This class represents a message.
  *
@@ -52,48 +55,38 @@ public class Message {
 	 *            The index of the message.
 	 * @param content
 	 *            The content of the message.
+	 * @param size
+	 *            The size of the message.
 	 */
-	public Message(String UUID, int index, String content) {
+	public Message(String UUID, int index, List<String> content, int size) {
 		this.UUID = UUID;
 		this.index = index;
-		this.content = content;
-		this.headers = getHeaders(content);
-		this.body = getBody(content);
-		this.size = getSize(content);
+		this.content = content.stream().collect(Collectors.joining("\n"));
+		final int contentDeliminiterIndex = getContentDeliminiterIndex(content);
+		this.headers = content.subList(0, contentDeliminiterIndex).stream().collect(Collectors.joining("\n"));
+		this.body = content.subList(contentDeliminiterIndex + 1, content.size()).stream().collect(Collectors.joining("\n"));
+		this.size = size;
 		this.isMarked = false;
 	}
 
 	/**
-	 * Get the headers from a message's content.
+	 * Get the content delimiter index.
 	 * 
 	 * @param content
-	 *            The message's content.
-	 * @return The headers of the message.
+	 *            The content.
+	 * @return The content delimiter index.
 	 */
-	private String getHeaders(String content) {
-		return null;
-	}
+	private int getContentDeliminiterIndex(List<String> content) {
+		int contentDelimiterIndex = 0;
+		for (String currentLine : content) {
+			if ("".equals(currentLine)) {
+				break;
+			}
 
-	/**
-	 * Get the body from a message's content.
-	 * 
-	 * @param content
-	 *            The message's content.
-	 * @return The body of the message.
-	 */
-	private String getBody(String content) {
-		return null;
-	}
+			contentDelimiterIndex++;
+		}
 
-	/**
-	 * Get the size from a message's content.
-	 * 
-	 * @param content
-	 *            The message's content.
-	 * @return The size of the message.
-	 */
-	private int getSize(String content) {
-		return 0;
+		return contentDelimiterIndex;
 	}
 
 	/**
