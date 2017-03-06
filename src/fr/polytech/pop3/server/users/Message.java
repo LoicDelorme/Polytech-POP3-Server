@@ -61,12 +61,13 @@ public class Message {
 	public Message(String UUID, int index, List<String> content, int size) {
 		this.UUID = UUID;
 		this.index = index;
-		this.content = content.stream().collect(Collectors.joining("\n"));
-		final int contentDeliminiterIndex = getContentDeliminiterIndex(content);
-		this.headers = content.subList(0, contentDeliminiterIndex).stream().collect(Collectors.joining("\n"));
-		this.body = content.subList(contentDeliminiterIndex + 1, content.size()).stream().collect(Collectors.joining("\n"));
 		this.size = size;
 		this.isMarked = false;
+
+		final int contentDeliminiterIndex = getContentDeliminiterIndex(content);
+		this.content = content.stream().collect(Collectors.joining("\n"));
+		this.headers = content.subList(0, contentDeliminiterIndex).stream().collect(Collectors.joining("\n"));
+		this.body = content.subList(contentDeliminiterIndex + 1, content.size()).stream().collect(Collectors.joining("\n"));
 	}
 
 	/**
@@ -77,16 +78,12 @@ public class Message {
 	 * @return The content delimiter index.
 	 */
 	private int getContentDeliminiterIndex(List<String> content) {
-		int contentDelimiterIndex = 0;
-		for (String currentLine : content) {
-			if ("".equals(currentLine)) {
-				break;
-			}
-
-			contentDelimiterIndex++;
+		int delimiterIndex = 0;
+		while (!"".equals(content.get(delimiterIndex))) {
+			delimiterIndex++;
 		}
 
-		return contentDelimiterIndex;
+		return delimiterIndex;
 	}
 
 	/**

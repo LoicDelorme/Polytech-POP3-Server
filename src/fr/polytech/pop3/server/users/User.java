@@ -69,6 +69,7 @@ public class User {
 		this.username = username;
 		this.password = null;
 		this.messages = null;
+
 		checkUsername();
 	}
 
@@ -90,6 +91,7 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.messages = new ArrayList<Message>();
+
 		checkUsername();
 		checkPassword();
 		lockInbox();
@@ -103,8 +105,8 @@ public class User {
 	 *             If the user doesn't exist.
 	 */
 	private void checkUsername() throws InvalidUsernameException {
-		final File userInbox = new File(INBOXES_PATH + this.username);
-		if (!userInbox.exists()) {
+		final File inbox = new File(INBOXES_PATH + this.username);
+		if (!inbox.exists()) {
 			throw new InvalidUsernameException();
 		}
 	}
@@ -139,22 +141,30 @@ public class User {
 				throw new InboxAlreadyLockedException();
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed to load stored password.", e);
+			LOGGER.log(Level.SEVERE, "Failed to create lock file.", e);
 		}
+	}
+
+	/**
+	 * Unlock the user's inbox.
+	 */
+	private void unlockInbox() {
+		final File lockFile = new File(INBOXES_PATH + this.username + File.separator + LOCK_FILE);
+		lockFile.delete();
 	}
 
 	/**
 	 * Load the user's messages.
 	 */
 	private void loadMessages() {
+		int index = 1;
 		final File[] messages = new File(INBOXES_PATH + this.username + File.separator).listFiles(file -> !file.isHidden());
-		File message = null;
-		for (int index = 0; index < messages.length; index++) {
+		for (File message : messages) {
 			try {
-				message = messages[index];
 				this.messages.add(new Message(message.getName(), index, Files.readAllLines(message.toPath()), (int) message.length()));
+				index++;
 			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "Failed to read message's content", e);
+				LOGGER.log(Level.SEVERE, "Failed to read message's content.", e);
 			}
 		}
 	}
@@ -178,12 +188,30 @@ public class User {
 	}
 
 	/**
+	 * Get the number of all messages.
+	 * 
+	 * @return The number of all messages.
+	 */
+	public int getNumberOfAllMessages() {
+		return listAllMessages().size();
+	}
+
+	/**
 	 * Get the number of unmarked messages.
 	 * 
 	 * @return The number of unmarked messages.
 	 */
-	public int getNumberOfMessages() {
-		return listMessages().size();
+	public int getNumberOfUnmarkedMessages() {
+		return listUnmarkedMessages().size();
+	}
+
+	/**
+	 * Get the size of all messages.
+	 * 
+	 * @return The size of all messages.
+	 */
+	public int getSizeOfAllMessages() {
+		return this.messages.stream().mapToInt(message -> message.getSize()).sum();
 	}
 
 	/**
@@ -191,8 +219,17 @@ public class User {
 	 * 
 	 * @return The size of unmarked messages.
 	 */
-	public int getSizeOfMessages() {
+	public int getSizeOfUnmarkedMessages() {
 		return this.messages.stream().filter(message -> !message.isMarked()).mapToInt(message -> message.getSize()).sum();
+	}
+
+	/**
+	 * List all messages.
+	 * 
+	 * @return The messages.
+	 */
+	public List<Message> listAllMessages() {
+		return this.messages.stream().collect(Collectors.toList());
 	}
 
 	/**
@@ -200,20 +237,38 @@ public class User {
 	 * 
 	 * @return The unmarked messages.
 	 */
-	public List<Message> listMessages() {
+	public List<Message> listUnmarkedMessages() {
 		return this.messages.stream().filter(message -> !message.isMarked()).collect(Collectors.toList());
 	}
 
 	/**
-	 * List a message.
+	 * Get a message in the all messages' list.
 	 * 
 	 * @param index
 	 *            The index.
 	 * @return NULL if there is no message at the specified index, else the requested message.
 	 */
-	public Message listMessage(int index) {
+	public Message getMessageInAllMessagesList(int index) {
 		final int messageIndex = index - 1;
-		final List<Message> messages = listMessages();
+		final List<Message> messages = listAllMessages();
+
+		if (messageIndex >= 0 && messageIndex < messages.size()) {
+			return messages.get(messageIndex);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get a message in the unmarked messages' list.
+	 * 
+	 * @param index
+	 *            The index.
+	 * @return NULL if there is no message at the specified index, else the requested message.
+	 */
+	public Message getMessageInUnmarkedMessagesList(int index) {
+		final int messageIndex = index - 1;
+		final List<Message> messages = listUnmarkedMessages();
 
 		if (messageIndex >= 0 && messageIndex < messages.size()) {
 			return messages.get(messageIndex);
@@ -225,7 +280,7 @@ public class User {
 	/**
 	 * Unmark all marked messages.
 	 */
-	public void unmarkMessages() {
+	public void unmarkAllMarkedMessages() {
 		this.messages.stream().filter(message -> message.isMarked()).forEach(message -> message.unmark());
 	}
 
@@ -236,28 +291,25 @@ public class User {
 	 * @throws FailedRemoveMessageException
 	 *             If there is a problem while trying to remove marked messages.
 	 */
-	public int deleteMessages() throws FailedRemoveMessageException {
-		boolean allDeleted = true;
+	public int deleteAllMarkedMessages() throws FailedRemoveMessageException {
+		boolean allMessagesDeleted = true;
+		boolean currentMessageDeleted = true;
 		final List<Message> markedMessages = this.messages.stream().filter(messages -> messages.isMarked()).collect(Collectors.toList());
 		for (Message markedMessage : markedMessages) {
-			allDeleted &= new File(INBOXES_PATH + this.username + File.separator + markedMessage.getUUID()).delete();
-			this.messages.remove(markedMessage);
+			currentMessageDeleted = new File(INBOXES_PATH + this.username + File.separator + markedMessage.getUUID()).delete();
+			if (currentMessageDeleted) {
+				this.messages.remove(markedMessage);
+			}
+
+			allMessagesDeleted &= currentMessageDeleted;
 		}
 
 		unlockInbox();
 
-		if (!allDeleted) {
+		if (!allMessagesDeleted) {
 			throw new FailedRemoveMessageException();
 		}
 
 		return this.messages.size();
-	}
-
-	/**
-	 * Unlock the user's inbox.
-	 */
-	private void unlockInbox() {
-		final File lockFile = new File(INBOXES_PATH + this.username + File.separator + LOCK_FILE);
-		lockFile.delete();
 	}
 }
