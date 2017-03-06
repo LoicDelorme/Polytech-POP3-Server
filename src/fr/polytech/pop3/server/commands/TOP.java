@@ -61,11 +61,10 @@ public class TOP extends Command {
 		}
 
 		try {
-			final int index = Integer.parseInt(parameters[0]);
 			final int numberOfLines = Integer.parseInt(parameters[1]);
-			final int numberOfMessages = user.getNumberOfMessages();
+			final int numberOfMessages = user.getNumberOfUnmarkedMessages();
 			final boolean isMaildropEmpty = numberOfMessages == 0;
-			final Message message = isMaildropEmpty ? null : user.listMessage(index);
+			final Message message = user.getMessage(Integer.parseInt(parameters[0]));
 
 			if (message == null) {
 				return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));

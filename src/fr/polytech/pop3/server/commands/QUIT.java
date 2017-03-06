@@ -44,7 +44,7 @@ public class QUIT extends Command {
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
 		try {
-			final int numberOfRemainingMessages = user.deleteMessages();
+			final int numberOfRemainingMessages = user.deleteAllMarkedMessages();
 			return new SuccessCommandResult(numberOfRemainingMessages == 0 ? EMPTY_INBOX_MESSAGE : String.format(QUIT_MESSAGE, numberOfRemainingMessages));
 		} catch (FailedRemoveMessageException e) {
 			return new ErrorCommandResult(DELETED_MESSAGES_NOT_REMOVED_ERROR_MESSAGE);

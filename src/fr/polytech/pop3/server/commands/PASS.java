@@ -54,11 +54,12 @@ public class PASS extends Command {
 			return new ErrorCommandResult(INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE);
 		}
 
+		final String password = parameters[0];
 		try {
-			final User connectedUser = new User(user.getUsername(), parameters[0]);
-			return new SuccessCommandResult(String.format(PASS_MESSAGE, connectedUser.getUsername(), connectedUser.getNumberOfMessages(), connectedUser.getSizeOfMessages()), connectedUser);
+			final User user_ = new User(user.getUsername(), password);
+			return new SuccessCommandResult(String.format(PASS_MESSAGE, user_.getUsername(), user_.getNumberOfUnmarkedMessages(), user_.getSizeOfUnmarkedMessages()), user_);
 		} catch (InvalidUsernameException e) {
-			return new ErrorCommandResult(INVALID_PASSWORD_ERROR_MESSAGE); // Cannot occur in this case but for compilation purpose.
+			return new ErrorCommandResult(INVALID_PASSWORD_ERROR_MESSAGE);
 		} catch (InvalidPasswordException e) {
 			return new ErrorCommandResult(INVALID_PASSWORD_ERROR_MESSAGE);
 		} catch (InboxAlreadyLockedException e) {

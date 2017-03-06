@@ -31,7 +31,7 @@ public class RSET extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		user.unmarkMessages();
-		return new SuccessCommandResult(String.format(RSET_MESSAGE, user.getNumberOfMessages(), user.getSizeOfMessages()));
+		user.unmarkAllMarkedMessages();
+		return new SuccessCommandResult(String.format(RSET_MESSAGE, user.getNumberOfUnmarkedMessages(), user.getSizeOfUnmarkedMessages()));
 	}
 }

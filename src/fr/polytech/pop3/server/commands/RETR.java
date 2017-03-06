@@ -48,20 +48,19 @@ public class RETR extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		switch (parameters.length) {
-			case 1:
-				try {
-					final Message message = user.listMessage(Integer.parseInt(parameters[0]));
-					if (message == null) {
-						return new ErrorCommandResult(INVALID_MESSAGE_NUMBER_ERROR_MESSAGE);
-					}
+		if (parameters.length != 1) {
+			return new ErrorCommandResult(INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE);
+		}
 
-					return new SuccessCommandResult(String.format(RETR_MESSAGE, message.getSize(), message.getContent()));
-				} catch (NumberFormatException e) {
-					return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
-				}
-			default:
-				return new ErrorCommandResult(INVALID_NUMBER_OF_PARAMETERS_ERROR_MESSAGE);
+		try {
+			final Message message = user.getMessage(Integer.parseInt(parameters[0]));
+			if (message == null) {
+				return new ErrorCommandResult(INVALID_MESSAGE_NUMBER_ERROR_MESSAGE);
+			}
+
+			return new SuccessCommandResult(String.format(RETR_MESSAGE, message.getSize(), message.getContent()));
+		} catch (NumberFormatException e) {
+			return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
 		}
 	}
 }

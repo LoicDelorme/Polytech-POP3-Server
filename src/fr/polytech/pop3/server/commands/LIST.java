@@ -62,13 +62,12 @@ public class LIST extends Command {
 	public CommandResult execute(User user, String[] parameters) {
 		switch (parameters.length) {
 			case 0:
-				return new SuccessCommandResult(String.format(ENHANCED_LIST_MESSAGE, user.getNumberOfMessages(), user.getSizeOfMessages(), user.listMessages().stream().map(message -> String.format(BASIC_LIST_MESSAGE, message.getIndex(), message.getSize())).collect(Collectors.joining("\r\n"))));
+				return new SuccessCommandResult(String.format(ENHANCED_LIST_MESSAGE, user.getNumberOfUnmarkedMessages(), user.getSizeOfUnmarkedMessages(), user.listUnmarkedMessages().stream().map(message -> String.format(BASIC_LIST_MESSAGE, message.getIndex(), message.getSize())).collect(Collectors.joining("\r\n"))));
 			case 1:
 				try {
-					final int index = Integer.parseInt(parameters[0]);
-					final int numberOfMessages = user.getNumberOfMessages();
+					final int numberOfMessages = user.getNumberOfUnmarkedMessages();
 					final boolean isMaildropEmpty = numberOfMessages == 0;
-					final Message message = isMaildropEmpty ? null : user.listMessage(index);
+					final Message message = user.getMessage(Integer.parseInt(parameters[0]));
 
 					if (message == null) {
 						return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));

@@ -31,6 +31,6 @@ public class STAT extends Command {
 
 	@Override
 	public CommandResult execute(User user, String[] parameters) {
-		return new SuccessCommandResult(String.format(STAT_MESSAGE, user.getNumberOfMessages(), user.getSizeOfMessages()));
+		return new SuccessCommandResult(String.format(STAT_MESSAGE, user.getNumberOfUnmarkedMessages(), user.getSizeOfUnmarkedMessages()));
 	}
 }

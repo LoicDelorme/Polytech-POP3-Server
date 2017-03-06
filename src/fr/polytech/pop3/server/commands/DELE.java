@@ -64,9 +64,9 @@ public class DELE extends Command {
 
 		try {
 			final int index = Integer.parseInt(parameters[0]);
-			final int numberOfMessages = user.getNumberOfMessages();
+			final int numberOfMessages = user.getNumberOfUnmarkedMessages();
 			final boolean isMaildropEmpty = numberOfMessages == 0;
-			final Message message = isMaildropEmpty ? null : user.listMessage(index);
+			final Message message = user.getMessage(index);
 
 			if (message == null) {
 				return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));
@@ -76,6 +76,7 @@ public class DELE extends Command {
 				return new ErrorCommandResult(String.format(ALREADY_DELETED_ERROR_MESSAGE, index));
 			}
 
+			message.mark();
 			return new SuccessCommandResult(String.format(DELE_MESSAGE, index));
 		} catch (NumberFormatException e) {
 			return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
