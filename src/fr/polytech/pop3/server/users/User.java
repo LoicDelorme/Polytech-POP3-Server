@@ -249,7 +249,7 @@ public class User {
 	 * @return NULL if there is no message with the given index, else the requested message.
 	 */
 	public Message getMessage(int index) {
-		return this.messages.stream().filter(message -> message.getIndex() == index - 1).findFirst().orElse(null);
+		return this.messages.stream().filter(message -> message.getIndex() == index).findFirst().orElse(null);
 	}
 
 	/**
