@@ -242,39 +242,14 @@ public class User {
 	}
 
 	/**
-	 * Get a message in the all messages' list.
+	 * Get a message.
 	 * 
 	 * @param index
 	 *            The index.
-	 * @return NULL if there is no message at the specified index, else the requested message.
+	 * @return NULL if there is no message with the given index, else the requested message.
 	 */
-	public Message getMessageInAllMessagesList(int index) {
-		final int messageIndex = index - 1;
-		final List<Message> messages = listAllMessages();
-
-		if (messageIndex >= 0 && messageIndex < messages.size()) {
-			return messages.get(messageIndex);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get a message in the unmarked messages' list.
-	 * 
-	 * @param index
-	 *            The index.
-	 * @return NULL if there is no message at the specified index, else the requested message.
-	 */
-	public Message getMessageInUnmarkedMessagesList(int index) {
-		final int messageIndex = index - 1;
-		final List<Message> messages = listUnmarkedMessages();
-
-		if (messageIndex >= 0 && messageIndex < messages.size()) {
-			return messages.get(messageIndex);
-		}
-
-		return null;
+	public Message getMessage(int index) {
+		return this.messages.stream().filter(message -> message.getIndex() == index - 1).findFirst().orElse(null);
 	}
 
 	/**
