@@ -1,14 +1,17 @@
 package fr.polytech.pop3.server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.polytech.pop3.server.states.ClosedState;
 import fr.polytech.pop3.server.states.State;
+import fr.polytech.pop3.server.states.results.StateResult;
 
 /**
  * This class represents a POP 3 session.
@@ -54,13 +57,31 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 
 	@Override
 	public void run() {
-		((Thread) this.pop3TimerObserver).start();
-
 		try {
-			final BufferedInputStream inputStream = new BufferedInputStream(this.socket.getInputStream());
-			final BufferedOutputStream outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+			final BufferedReader inputStream = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+			final DataOutput outputStream = new DataOutputStream(this.socket.getOutputStream());
+
+			((Thread) this.pop3TimerObserver).start();
+
+			String inputCommand = "";
+			StateResult stateResult = null;
+			while (true) {
+				this.pop3TimerObserver.notifyActivity();
+				stateResult = this.currentState.runCommand(inputCommand.trim());
+
+				this.currentState = stateResult.getNextState();
+				outputStream.writeBytes(stateResult.getMessage() + "\r\n");
+
+				if (this.currentState == null) {
+					break;
+				}
+
+				inputCommand = inputStream.readLine();
+			}
+
+			this.socket.close();
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "An unexpected exception occured.", e);
+			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] An unexpected exception occured", e);
 		}
 	}
 
@@ -69,7 +90,7 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "An unexpected exception occured while trying to close the socket.", e);
+			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] An unexpected exception occured while trying to close the socket", e);
 		}
 	}
 }

@@ -17,12 +17,12 @@ public class Pop3Server implements Runnable {
 	/**
 	 * The server port.
 	 */
-	private static final int SERVER_PORT = 100;
+	private static final int SERVER_PORT = 2017;
 
 	/**
 	 * The server queue length.
 	 */
-	private static final int SERVER_QUEUE_LENGHT = 50;
+	private static final int SERVER_QUEUE_LENGHT = 10;
 
 	/**
 	 * The server autologout delay.
@@ -37,14 +37,17 @@ public class Pop3Server implements Runnable {
 	@Override
 	public void run() {
 		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT, SERVER_QUEUE_LENGHT)) {
+			Socket client = null;
 			while (true) {
-				Socket client = serverSocket.accept();
+				client = serverSocket.accept();
 
-				Thread clientThread = new Thread(new Pop3Session(client, SERVER_AUTOLOGOUT_DELAY));
+				final Thread clientThread = new Thread(new Pop3Session(client, SERVER_AUTOLOGOUT_DELAY));
 				clientThread.start();
+
+				LOGGER.log(Level.INFO, String.format("[SERVER] New client (address: %s ; port: %s)", client.getInetAddress().getHostName(), client.getPort()));
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Unabled to create POP 3 server socket on port: " + SERVER_PORT, e);
+			LOGGER.log(Level.SEVERE, "[SERVER] Unabled to create POP 3 server socket on port: " + SERVER_PORT, e);
 		}
 	}
 
@@ -55,7 +58,7 @@ public class Pop3Server implements Runnable {
 	 *            Some arguments.
 	 */
 	public static void main(String[] args) {
-		Thread serverThread = new Thread(new Pop3Server());
+		final Thread serverThread = new Thread(new Pop3Server());
 		serverThread.start();
 	}
 }
