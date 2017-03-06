@@ -77,14 +77,12 @@ public abstract class State {
 	 * @return The state result.
 	 */
 	public StateResult runCommand(String receivedCommand) {
-		String[] data = receivedCommand.split(" ");
+		final String[] splittedCommand = receivedCommand.split(" ");
 
-		String command = data[0].toUpperCase();
-		String[] parameters = null;
-
-		if (data.length > 1) {
-			parameters = new String[data.length - 1];
-			System.arraycopy(data, 1, parameters, 0, parameters.length);
+		final String command = splittedCommand[0].toUpperCase();
+		final String[] parameters = new String[splittedCommand.length - 1];
+		if (splittedCommand.length > 1) {
+			System.arraycopy(splittedCommand, 1, parameters, 0, parameters.length);
 		}
 
 		return executeCommand(command, parameters);

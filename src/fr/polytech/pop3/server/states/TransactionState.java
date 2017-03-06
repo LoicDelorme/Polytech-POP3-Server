@@ -44,47 +44,47 @@ public class TransactionState extends State {
 
 		switch (command) {
 			case DELE.COMMAND_NAME:
-				CommandResult deleCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult deleCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = deleCommandResult.toString();
 				nextState = this;
 				break;
 			case LIST.COMMAND_NAME:
-				CommandResult listCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult listCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = listCommandResult.toString();
 				nextState = this;
 				break;
 			case NOOP.COMMAND_NAME:
-				CommandResult noopCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult noopCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = noopCommandResult.toString();
 				nextState = this;
 				break;
 			case QUIT.COMMAND_NAME:
-				CommandResult quitCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult quitCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = quitCommandResult.toString();
 				nextState = null;
 				break;
 			case RETR.COMMAND_NAME:
-				CommandResult retrCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult retrCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = retrCommandResult.toString();
 				nextState = this;
 				break;
 			case RSET.COMMAND_NAME:
-				CommandResult rsetCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult rsetCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = rsetCommandResult.toString();
 				nextState = this;
 				break;
 			case STAT.COMMAND_NAME:
-				CommandResult statCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult statCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = statCommandResult.toString();
 				nextState = this;
 				break;
 			case TOP.COMMAND_NAME:
-				CommandResult topCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult topCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = topCommandResult.toString();
 				nextState = this;
 				break;
 			case UIDL.COMMAND_NAME:
-				CommandResult uidlCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult uidlCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = uidlCommandResult.toString();
 				nextState = this;
 				break;

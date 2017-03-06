@@ -43,7 +43,7 @@ public class IdentifiedState extends State {
 
 		switch (command) {
 			case PASS.COMMAND_NAME:
-				CommandResult passCommandResult = COMMANDS.get(command).execute(this.user, parameters);
+				final CommandResult passCommandResult = COMMANDS.get(command).execute(this.user, parameters);
 				message = passCommandResult.toString();
 				nextState = passCommandResult.wasWellExecuted() ? new TransactionState(passCommandResult.getUser()) : this;
 				break;
