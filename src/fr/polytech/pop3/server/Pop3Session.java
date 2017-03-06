@@ -77,6 +77,7 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 				}
 
 				inputCommand = inputStream.readLine();
+				LOGGER.log(Level.INFO, "[SERVER_THREAD] inputCommand:" + inputCommand);
 			}
 
 			this.socket.close();
