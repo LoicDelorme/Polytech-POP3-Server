@@ -1,12 +1,12 @@
 package fr.polytech.pop3.server.users.exceptions;
 
 /**
- * This class represents a failed to unlock session exception.
+ * This class represents a failed to unlock inbox exception.
  *
  * @author DELORME Loïc
  * @since 1.0.0
  */
-public class FailedUnlockSessionException extends Exception {
+public class FailedUnlockInboxException extends Exception {
 
 	/**
 	 * The serial version UID.
