@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import fr.polytech.pop3.server.states.ClosedState;
 import fr.polytech.pop3.server.states.State;
 import fr.polytech.pop3.server.states.results.StateResult;
+import fr.polytech.pop3.server.users.User;
 
 /**
  * This class represents a POP 3 session.
@@ -42,6 +43,11 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 	private State currentState;
 
 	/**
+	 * The user.
+	 */
+	private User user;
+
+	/**
 	 * Create a POP 3 session.
 	 * 
 	 * @param socket
@@ -70,6 +76,7 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 				stateResult = this.currentState.runCommand(inputCommand.trim());
 
 				this.currentState = stateResult.getNextState();
+				this.user = this.currentState != null ? this.currentState.getUser() : null;
 				outputStream.writeBytes(stateResult.getMessage() + "\r\n");
 
 				if (this.currentState == null) {
@@ -89,6 +96,10 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 	@Override
 	public void notifyAutoLogout() {
 		try {
+			if (this.user != null) {
+				this.user.unlockInbox();
+			}
+
 			this.socket.close();
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] An unexpected exception occured while trying to close the socket", e);
