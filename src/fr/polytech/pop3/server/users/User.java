@@ -148,7 +148,7 @@ public class User {
 	/**
 	 * Unlock the user's inbox.
 	 */
-	private void unlockInbox() {
+	public void unlockInbox() {
 		final File lockFile = new File(INBOXES_PATH + this.username + File.separator + LOCK_FILE);
 		lockFile.delete();
 	}
