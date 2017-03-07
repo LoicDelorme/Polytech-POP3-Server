@@ -70,6 +70,15 @@ public abstract class State {
 	}
 
 	/**
+	 * Get the user.
+	 * 
+	 * @return The user.
+	 */
+	public User getUser() {
+		return this.user;
+	}
+
+	/**
 	 * Run the command.
 	 * 
 	 * @param receivedCommand
