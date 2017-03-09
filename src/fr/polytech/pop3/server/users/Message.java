@@ -79,7 +79,7 @@ public class Message {
 	 */
 	private int getContentDeliminiterIndex(List<String> content) {
 		int delimiterIndex = 0;
-		while (!"".equals(content.get(delimiterIndex))) {
+		while (!"..".equals(content.get(delimiterIndex))) {
 			delimiterIndex++;
 		}
 

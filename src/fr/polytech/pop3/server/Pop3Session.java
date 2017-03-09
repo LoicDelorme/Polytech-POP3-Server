@@ -78,6 +78,7 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 				this.currentState = stateResult.getNextState();
 				this.user = this.currentState != null ? this.currentState.getUser() : null;
 				outputStream.writeBytes(stateResult.getMessage() + "\r\n");
+				outputStream.writeBytes("\n");
 
 				if (this.currentState == null) {
 					break;

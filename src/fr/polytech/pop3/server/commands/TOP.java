@@ -20,7 +20,7 @@ public class TOP extends Command {
 	/**
 	 * The TOP message.
 	 */
-	private static final String TOP_MESSAGE = "\r\n%s\r\n\r\n%s\r\n.";
+	private static final String TOP_MESSAGE = "\r\n%s\r\n..\r\n%s\r\n.";
 
 	/**
 	 * The invalid number of parameters error message.
@@ -70,7 +70,7 @@ public class TOP extends Command {
 				return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));
 			}
 
-			return new SuccessCommandResult(String.format(TOP_MESSAGE, message.getHeaders(), Arrays.asList(message.getBody().split("\n")).stream().limit(numberOfLines).collect(Collectors.joining("\n"))));
+			return new SuccessCommandResult(String.format(TOP_MESSAGE, message.getHeaders(), Arrays.asList(message.getBody().split("\r\n")).stream().limit(numberOfLines).collect(Collectors.joining("\r\n"))));
 		} catch (NumberFormatException e) {
 			return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
 		}
