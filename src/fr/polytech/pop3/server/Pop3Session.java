@@ -38,11 +38,6 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 	private final Pop3TimerObserver pop3TimerObserver;
 
 	/**
-	 * The current state.
-	 */
-	private State currentState;
-
-	/**
 	 * The user.
 	 */
 	private User user;
@@ -58,7 +53,6 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 	public Pop3Session(Socket socket, int connectionTimeout) {
 		this.socket = socket;
 		this.pop3TimerObserver = new Pop3Stopwatch(connectionTimeout, this);
-		this.currentState = new ClosedState();
 	}
 
 	@Override
@@ -69,23 +63,28 @@ public class Pop3Session implements Runnable, Pop3TimerObservable {
 
 			((Thread) this.pop3TimerObserver).start();
 
-			String inputCommand = "";
+			String commandInput = "";
+			String commandOutput = "";
+			State currentState = new ClosedState();
 			StateResult stateResult = null;
 			while (true) {
 				this.pop3TimerObserver.notifyActivity();
-				stateResult = this.currentState.runCommand(inputCommand.trim());
+				stateResult = currentState.runCommand(commandInput.trim());
 
-				this.currentState = stateResult.getNextState();
-				this.user = this.currentState != null ? this.currentState.getUser() : null;
-				outputStream.writeBytes(stateResult.getMessage() + "\r\n");
-				outputStream.writeBytes("\n");
+				currentState = stateResult.getNextState();
+				commandOutput = stateResult.getMessage();
+				this.user = currentState != null ? currentState.getUser() : null;
 
-				if (this.currentState == null) {
+				outputStream.writeBytes(commandOutput + "\r\n");
+				outputStream.writeBytes("\r\n");
+				LOGGER.log(Level.INFO, "[SERVER_THREAD] commandOutput:" + commandOutput);
+
+				if (currentState == null) {
 					break;
 				}
 
-				inputCommand = inputStream.readLine();
-				LOGGER.log(Level.INFO, "[SERVER_THREAD] inputCommand:" + inputCommand);
+				commandInput = inputStream.readLine();
+				LOGGER.log(Level.INFO, "[SERVER_THREAD] commandInput:" + commandInput);
 			}
 
 			this.socket.close();

@@ -84,7 +84,7 @@ public class Pop3Stopwatch extends Thread implements Pop3TimerObserver {
 					this.pop3TimerObservable.notifyAutoLogout();
 				}
 			} catch (InterruptedException e) {
-				LOGGER.log(Level.SEVERE, "POP 3 stopwatch failed to enter into sleep mode.");
+				LOGGER.log(Level.SEVERE, "[SERVER_THREAD] POP 3 stopwatch failed to enter into sleep mode");
 			}
 		}
 	}

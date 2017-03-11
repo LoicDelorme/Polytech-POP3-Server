@@ -124,7 +124,7 @@ public class User {
 				throw new InvalidPasswordException();
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed to load stored password.", e);
+			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] Failed to load stored password", e);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class User {
 				throw new InboxAlreadyLockedException();
 			}
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Failed to create lock file.", e);
+			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] Failed to create lock file", e);
 		}
 	}
 
@@ -164,7 +164,7 @@ public class User {
 				this.messages.add(new Message(message.getName(), index, Files.readAllLines(message.toPath()), (int) message.length()));
 				index++;
 			} catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "Failed to read message's content.", e);
+				LOGGER.log(Level.SEVERE, "[SERVER_THREAD] Failed to read message's content", e);
 			}
 		}
 	}

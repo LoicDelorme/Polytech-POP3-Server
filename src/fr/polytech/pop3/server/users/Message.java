@@ -65,9 +65,9 @@ public class Message {
 		this.isMarked = false;
 
 		final int contentDeliminiterIndex = getContentDeliminiterIndex(content);
-		this.content = content.stream().collect(Collectors.joining("\r\n"));
-		this.headers = content.subList(0, contentDeliminiterIndex).stream().collect(Collectors.joining("\r\n"));
-		this.body = content.subList(contentDeliminiterIndex + 1, content.size()).stream().collect(Collectors.joining("\r\n"));
+		this.content = content.stream().collect(Collectors.joining("\n"));
+		this.headers = content.subList(0, contentDeliminiterIndex).stream().collect(Collectors.joining("\n"));
+		this.body = content.subList(contentDeliminiterIndex + 1, content.size()).stream().collect(Collectors.joining("\n"));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Message {
 	 */
 	private int getContentDeliminiterIndex(List<String> content) {
 		int delimiterIndex = 0;
-		while (!"..".equals(content.get(delimiterIndex))) {
+		while (!".".equals(content.get(delimiterIndex))) {
 			delimiterIndex++;
 		}
 
