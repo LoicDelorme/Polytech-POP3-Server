@@ -7,6 +7,7 @@ import fr.polytech.pop3.server.commands.results.CommandResult;
 import fr.polytech.pop3.server.commands.results.ErrorCommandResult;
 import fr.polytech.pop3.server.commands.results.SuccessCommandResult;
 import fr.polytech.pop3.server.states.results.StateResult;
+import fr.polytech.pop3.server.users.User;
 
 /**
  * This class represents an authorization state.
@@ -28,9 +29,12 @@ public class AuthorizationState extends State {
 
 	/**
 	 * Create an authorization state.
+	 * 
+	 * @param user
+	 *            The user.
 	 */
-	public AuthorizationState() {
-		super();
+	public AuthorizationState(User user) {
+		super(user);
 	}
 
 	@Override

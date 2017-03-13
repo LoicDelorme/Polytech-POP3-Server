@@ -3,6 +3,8 @@ package fr.polytech.pop3.server.users;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -53,6 +55,11 @@ public class User {
 	private final String password;
 
 	/**
+	 * The security message.
+	 */
+	private final String securityMessage;
+
+	/**
 	 * The messages.
 	 */
 	private final List<Message> messages;
@@ -60,14 +67,30 @@ public class User {
 	/**
 	 * Create a user.
 	 * 
+	 * @param securityMessage
+	 *            The security message.
+	 */
+	public User(String securityMessage) {
+		this.username = null;
+		this.password = null;
+		this.securityMessage = securityMessage;
+		this.messages = null;
+	}
+
+	/**
+	 * Create a user.
+	 * 
 	 * @param username
 	 *            The username.
+	 * @param securityMessage
+	 *            The security message.
 	 * @throws InvalidUsernameException
 	 *             If the user doesn't exist.
 	 */
-	public User(String username) throws InvalidUsernameException {
+	public User(String username, String securityMessage) throws InvalidUsernameException {
 		this.username = username;
 		this.password = null;
+		this.securityMessage = securityMessage;
 		this.messages = null;
 
 		checkUsername();
@@ -80,6 +103,8 @@ public class User {
 	 *            The username.
 	 * @param password
 	 *            The password.
+	 * @param securityMessage
+	 *            The security message.
 	 * @throws InvalidUsernameException
 	 *             If the user doesn't exist.
 	 * @throws InvalidPasswordException
@@ -87,9 +112,10 @@ public class User {
 	 * @throws InboxAlreadyLockedException
 	 *             If the inbox is already locked.
 	 */
-	public User(String username, String password) throws InvalidUsernameException, InvalidPasswordException, InboxAlreadyLockedException {
+	public User(String username, String password, String securityMessage) throws InvalidUsernameException, InvalidPasswordException, InboxAlreadyLockedException {
 		this.username = username;
 		this.password = password;
+		this.securityMessage = securityMessage;
 		this.messages = new ArrayList<Message>();
 
 		checkUsername();
@@ -120,11 +146,20 @@ public class User {
 	private void checkPassword() throws InvalidPasswordException {
 		try {
 			final String storedPassword = Files.readAllLines(new File(INBOXES_PATH + this.username + File.separator + PASSWORD_FILE).toPath()).get(0);
-			if (!storedPassword.equals(this.password)) {
+			final String passwordFootprint = this.securityMessage + storedPassword;
+			final byte[] digest = MessageDigest.getInstance("MD5").digest(passwordFootprint.getBytes());
+
+			final StringBuilder encryptedPassword = new StringBuilder();
+			for (byte b : digest) {
+				encryptedPassword.append(String.format("%02x", b));
+			}
+
+			if (!encryptedPassword.toString().equals(this.password)) {
 				throw new InvalidPasswordException();
 			}
-		} catch (IOException e) {
+		} catch (NoSuchAlgorithmException | IOException e) {
 			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] Failed to load stored password", e);
+			throw new InvalidPasswordException();
 		}
 	}
 
@@ -158,7 +193,7 @@ public class User {
 	 */
 	private void loadMessages() {
 		int index = 1;
-		final File[] messages = new File(INBOXES_PATH + this.username + File.separator).listFiles(file -> !file.isHidden());
+		final File[] messages = new File(INBOXES_PATH + this.username + File.separator).listFiles(file -> !file.getName().startsWith("."));
 		for (File message : messages) {
 			try {
 				this.messages.add(new Message(message.getName(), index, Files.readAllLines(message.toPath()), (int) message.length()));
@@ -185,6 +220,15 @@ public class User {
 	 */
 	public String getPassword() {
 		return this.password;
+	}
+
+	/**
+	 * Get the security message.
+	 * 
+	 * @return The security message.
+	 */
+	public String getSecurityMessage() {
+		return this.securityMessage;
 	}
 
 	/**
@@ -271,7 +315,7 @@ public class User {
 		boolean currentMessageDeleted = true;
 		final List<Message> markedMessages = this.messages.stream().filter(messages -> messages.isMarked()).collect(Collectors.toList());
 		for (Message markedMessage : markedMessages) {
-			currentMessageDeleted = new File(INBOXES_PATH + this.username + File.separator + markedMessage.getUUID()).delete();
+			currentMessageDeleted = new File(INBOXES_PATH + this.username + File.separator + markedMessage.getUuid()).delete();
 			if (currentMessageDeleted) {
 				this.messages.remove(markedMessage);
 			}

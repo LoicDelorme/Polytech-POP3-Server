@@ -14,7 +14,7 @@ public class Message {
 	/**
 	 * The UUID of the message.
 	 */
-	private final String UUID;
+	private final String uuid;
 
 	/**
 	 * The index of the message.
@@ -59,7 +59,7 @@ public class Message {
 	 *            The size of the message.
 	 */
 	public Message(String UUID, int index, List<String> content, int size) {
-		this.UUID = UUID;
+		this.uuid = UUID;
 		this.index = index;
 		this.size = size;
 		this.isMarked = false;
@@ -91,8 +91,8 @@ public class Message {
 	 * 
 	 * @return The UUID of the message.
 	 */
-	public String getUUID() {
-		return this.UUID;
+	public String getUuid() {
+		return this.uuid;
 	}
 
 	/**

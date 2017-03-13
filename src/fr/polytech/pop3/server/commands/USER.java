@@ -49,7 +49,7 @@ public class USER extends Command {
 
 		final String username = parameters[0];
 		try {
-			return new SuccessCommandResult(String.format(USER_MESSAGE, username), new User(username));
+			return new SuccessCommandResult(String.format(USER_MESSAGE, username), new User(username, user.getSecurityMessage()));
 		} catch (InvalidUsernameException e) {
 			return new ErrorCommandResult(String.format(INVALID_USER_ERROR_MESSAGE, username));
 		}

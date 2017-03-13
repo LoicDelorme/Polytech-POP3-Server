@@ -62,7 +62,7 @@ public class UIDL extends Command {
 	public CommandResult execute(User user, String[] parameters) {
 		switch (parameters.length) {
 			case 0:
-				return new SuccessCommandResult(String.format(ENHANCED_UIDL_MESSAGE, user.listUnmarkedMessages().stream().map(message -> String.format(BASIC_UIDL_MESSAGE, message.getIndex(), message.getUUID())).collect(Collectors.joining("\r\n"))));
+				return new SuccessCommandResult(String.format(ENHANCED_UIDL_MESSAGE, user.listUnmarkedMessages().stream().map(message -> String.format(BASIC_UIDL_MESSAGE, message.getIndex(), message.getUuid())).collect(Collectors.joining("\r\n"))));
 			case 1:
 				try {
 					final int numberOfMessages = user.getNumberOfUnmarkedMessages();
@@ -73,7 +73,7 @@ public class UIDL extends Command {
 						return new ErrorCommandResult(isMaildropEmpty ? EMPTY_MAILDROP_ERROR_MESSAGE : String.format(INVALID_INDEX_ERROR_MESSAGE, numberOfMessages));
 					}
 
-					return new SuccessCommandResult(String.format(BASIC_UIDL_MESSAGE, message.getIndex(), message.getUUID()));
+					return new SuccessCommandResult(String.format(BASIC_UIDL_MESSAGE, message.getIndex(), message.getUuid()));
 				} catch (NumberFormatException e) {
 					return new ErrorCommandResult(INVALID_PARAMETER_ERROR_MESSAGE);
 				}

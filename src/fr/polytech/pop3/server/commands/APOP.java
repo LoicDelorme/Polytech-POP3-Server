@@ -62,7 +62,7 @@ public class APOP extends Command {
 		final String username = parameters[0];
 		final String password = parameters[1];
 		try {
-			final User user_ = new User(username, password);
+			final User user_ = new User(username, password, user.getSecurityMessage());
 			return new SuccessCommandResult(String.format(APOP_MESSAGE, username, user_.getNumberOfUnmarkedMessages(), user_.getSizeOfUnmarkedMessages()), user_);
 		} catch (InvalidUsernameException e) {
 			return new ErrorCommandResult(String.format(INVALID_USERNAME_ERROR_MESSAGE, username));

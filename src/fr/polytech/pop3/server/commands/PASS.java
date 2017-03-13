@@ -56,7 +56,7 @@ public class PASS extends Command {
 
 		final String password = parameters[0];
 		try {
-			final User user_ = new User(user.getUsername(), password);
+			final User user_ = new User(user.getUsername(), password, user.getSecurityMessage());
 			return new SuccessCommandResult(String.format(PASS_MESSAGE, user_.getUsername(), user_.getNumberOfUnmarkedMessages(), user_.getSizeOfUnmarkedMessages()), user_);
 		} catch (InvalidUsernameException e) {
 			return new ErrorCommandResult(INVALID_PASSWORD_ERROR_MESSAGE);
