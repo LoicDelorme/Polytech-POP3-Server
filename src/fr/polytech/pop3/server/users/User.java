@@ -145,20 +145,18 @@ public class User {
 	 */
 	private void checkPassword() throws InvalidPasswordException {
 		try {
-			final String storedPassword = Files.readAllLines(new File(INBOXES_PATH + this.username + File.separator + PASSWORD_FILE).toPath()).get(0);
-			final String passwordFootprint = this.securityMessage + storedPassword;
-			final byte[] digest = MessageDigest.getInstance("MD5").digest(passwordFootprint.getBytes());
+			final String passwordFootprint = this.securityMessage + Files.readAllLines(new File(INBOXES_PATH + this.username + File.separator + PASSWORD_FILE).toPath()).get(0);
+			final byte[] passwordFootprintBytes = MessageDigest.getInstance("MD5").digest(passwordFootprint.getBytes());
 
 			final StringBuilder encryptedPassword = new StringBuilder();
-			for (byte b : digest) {
-				encryptedPassword.append(String.format("%02x", b));
+			for (byte passwordFootprintByte : passwordFootprintBytes) {
+				encryptedPassword.append(String.format("%02x", passwordFootprintByte));
 			}
 
 			if (!encryptedPassword.toString().equals(this.password)) {
 				throw new InvalidPasswordException();
 			}
 		} catch (NoSuchAlgorithmException | IOException e) {
-			LOGGER.log(Level.SEVERE, "[SERVER_THREAD] Failed to load stored password", e);
 			throw new InvalidPasswordException();
 		}
 	}
@@ -313,6 +311,7 @@ public class User {
 	public int deleteAllMarkedMessages() throws FailedRemoveMessageException {
 		boolean allMessagesDeleted = true;
 		boolean currentMessageDeleted = true;
+
 		final List<Message> markedMessages = this.messages.stream().filter(messages -> messages.isMarked()).collect(Collectors.toList());
 		for (Message markedMessage : markedMessages) {
 			currentMessageDeleted = new File(INBOXES_PATH + this.username + File.separator + markedMessage.getUuid()).delete();
