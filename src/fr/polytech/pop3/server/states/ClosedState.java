@@ -29,8 +29,7 @@ public class ClosedState extends State {
 
 	@Override
 	protected StateResult executeCommand(String command, String[] parameters) {
-		final String securityMessage = "<" + ManagementFactory.getRuntimeMXBean().getName() + "@" + LocalDateTime.now().toString() + ">";
-
+		final String securityMessage = String.format("<%s@%s>", ManagementFactory.getRuntimeMXBean().getName(), LocalDateTime.now().toString());
 		return new StateResult(new SuccessCommandResult(String.format(WELCOME_MESSAGE, securityMessage)).toString(), new AuthorizationState(new User(securityMessage)));
 	}
 }
