@@ -1,10 +1,13 @@
 package fr.polytech.pop3.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 /**
  * This class represents a POP 3 server.
@@ -36,7 +39,11 @@ public class Pop3Server implements Runnable {
 
 	@Override
 	public void run() {
-		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT, SERVER_QUEUE_LENGHT)) {
+		final SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+
+		try (final SSLServerSocket serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(SERVER_PORT, SERVER_QUEUE_LENGHT)) {
+			serverSocket.setEnabledCipherSuites(Arrays.stream(sslServerSocketFactory.getSupportedCipherSuites()).filter(cipher -> cipher.contains("anon")).toArray(size -> new String[size]));
+
 			Socket client = null;
 			while (true) {
 				client = serverSocket.accept();
