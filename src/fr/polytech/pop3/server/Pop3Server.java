@@ -2,7 +2,6 @@ package fr.polytech.pop3.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +41,7 @@ public class Pop3Server implements Runnable {
 		final SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 
 		try (final SSLServerSocket serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(SERVER_PORT, SERVER_QUEUE_LENGHT)) {
-			serverSocket.setEnabledCipherSuites(Arrays.stream(sslServerSocketFactory.getSupportedCipherSuites()).filter(cipher -> cipher.contains("anon")).toArray(size -> new String[size]));
+			serverSocket.setEnabledCipherSuites(sslServerSocketFactory.getSupportedCipherSuites());
 
 			Socket client = null;
 			while (true) {
